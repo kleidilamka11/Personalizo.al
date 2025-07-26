@@ -3,23 +3,25 @@ from app.db import engine
 from app.models import user  # ✅ Registers model
 from app.models.user import Base
 from app.routes import auth
+from app.routes import admin
 from fastapi.openapi.utils import get_openapi
 
+# ✅ Create app first
+app = FastAPI()
 
-app = FastAPI()  # 🔄 Moved this up first
-
-# 👇 This line actually creates the tables in the database
+# ✅ Create tables
 Base.metadata.create_all(bind=engine)
 
-# 👇 Register routes AFTER creating app
+# ✅ Include routers
 app.include_router(auth.router)
+app.include_router(admin.router)
 
+# ✅ Root route
 @app.get("/")
 def root():
     return {"message": "Welcome to Personalizo.al"}
 
-
-
+# ✅ Custom OpenAPI with Bearer auth
 def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
@@ -31,11 +33,9 @@ def custom_openapi():
         routes=app.routes,
     )
 
-    # 🛠 Ensure components exists
     if "components" not in openapi_schema:
         openapi_schema["components"] = {}
 
-    # Add Bearer token security scheme
     openapi_schema["components"]["securitySchemes"] = {
         "BearerAuth": {
             "type": "http",
@@ -44,13 +44,9 @@ def custom_openapi():
         }
     }
 
-    # Apply it globally
     openapi_schema["security"] = [{"BearerAuth": []}]
-
     app.openapi_schema = openapi_schema
     return app.openapi_schema
 
 # ✅ Register the custom OpenAPI generator
 app.openapi = custom_openapi
-
-
