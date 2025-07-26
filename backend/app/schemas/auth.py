@@ -21,7 +21,6 @@ class UserResponse(BaseModel):
         "from_attributes": True  # ✅ Replaces orm_mode in Pydantic v2
     }
 
-from pydantic import BaseModel, EmailStr
 
 # 🧾 Schema for the login request (what the user sends)
 class LoginRequest(BaseModel):
@@ -29,7 +28,7 @@ class LoginRequest(BaseModel):
     password: str           # Plaintext password they enter
 
 
-# 🔐 Schema for the login response (what we send back)
 class TokenResponse(BaseModel):
-    access_token: str       # JWT access token
-    token_type: str         # Usually "bearer"
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
