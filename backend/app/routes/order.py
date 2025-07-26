@@ -6,8 +6,9 @@ from app.models.order import Order, OrderStatus
 from app.models.song_package import SongPackage
 from app.schemas.order import OrderCreate, OrderResponse
 from app.db import get_db
-from app.dependencies import get_current_user
 from app.models.user import User
+from app.core.security import get_current_user
+
 
 router = APIRouter(prefix="/orders", tags=["Orders"])
 
