@@ -3,6 +3,12 @@ import importlib
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 import pytest
+import sys
+from pathlib import Path
+
+# Ensure the backend directory is on sys.path so that "import app" works even
+# when tests are invoked from the repository root.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 
 @pytest.fixture
