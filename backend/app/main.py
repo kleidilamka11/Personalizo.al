@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.db import engine
 from app.models import user  # ✅ Registers model
-from app.models.user import Base
+from app.db import Base
 from app.routes import auth
 from app.routes import admin
 from fastapi.openapi.utils import get_openapi

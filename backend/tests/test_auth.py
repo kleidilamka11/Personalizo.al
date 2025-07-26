@@ -32,11 +32,26 @@ def test_auth_flow(client):
     assert refresh.json()["access_token"]
 
 
-def test_admin_access(client):
-    admin = register_user(client, is_admin=True)
-    admin_tokens = login_user(client, admin["email"])
-    user = register_user(client)
-    user_tokens = login_user(client, user["email"])
+def test_admin_access(client, db):
+    from app.models.user import User
+    from app.core.security import hash_password
+
+    admin = User(
+        email=f"{uuid.uuid4()}@example.com",
+        username=f"admin_{uuid.uuid4().hex[:8]}",
+        hashed_password=hash_password("password"),
+        is_admin=True,
+    )
+    user = User(
+        email=f"{uuid.uuid4()}@example.com",
+        username=f"user_{uuid.uuid4().hex[:8]}",
+        hashed_password=hash_password("password"),
+    )
+    db.add_all([admin, user])
+    db.commit()
+
+    admin_tokens = login_user(client, admin.email)
+    user_tokens = login_user(client, user.email)
 
     admin_header = {"Authorization": f"Bearer {admin_tokens['access_token']}"}
     user_header = {"Authorization": f"Bearer {user_tokens['access_token']}"}

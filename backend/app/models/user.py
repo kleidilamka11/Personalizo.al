@@ -1,13 +1,6 @@
 # Importing base tools from SQLAlchemy
-from sqlalchemy import Column, Integer, String, DateTime, func
-from sqlalchemy.orm import declarative_base
-from sqlalchemy import Column, Integer, String, Boolean, DateTime
-from sqlalchemy.orm import declarative_base
-import datetime
-
-
-# This creates the base class that all models will inherit from
-Base = declarative_base()
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, func
+from app.db import Base
 
 # This defines our User table in the database
 class User(Base):
