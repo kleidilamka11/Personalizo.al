@@ -4,6 +4,8 @@ from app.models import user  # ✅ Registers model
 from app.routes import auth
 from app.routes import admin
 from fastapi.openapi.utils import get_openapi
+from app.routes import song_package  # 👈 import it
+
 
 # ✅ Create app first
 app = FastAPI()
@@ -11,9 +13,13 @@ app = FastAPI()
 # ✅ Create tables
 Base.metadata.create_all(bind=engine)
 
-# ✅ Include routers
+# ✅ Auth routers
 app.include_router(auth.router)
 app.include_router(admin.router)
+
+# ✅ Song routers
+app.include_router(song_package.router)  # 👈 song package route
+
 
 # ✅ Root route
 @app.get("/")
