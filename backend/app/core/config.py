@@ -7,7 +7,6 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
     class Config:
-        env_file = "/home/lamka/Desktop/MyProjects/Projects/Personalizo.al/backend/.env"
+        env_file = ".env"
 
 settings = Settings()
-print("✅ ENV LOADED:", settings.SECRET_KEY)
