@@ -5,6 +5,7 @@ from app.routes import auth
 from app.routes import admin
 from fastapi.openapi.utils import get_openapi
 from app.routes import song_package  # 👈 import it
+from app.routes import order
 
 
 # ✅ Create app first
@@ -19,6 +20,10 @@ app.include_router(admin.router)
 
 # ✅ Song routers
 app.include_router(song_package.router)  # 👈 song package route
+
+# ✅ Order Routers
+app.include_router(order.router)
+
 
 
 # ✅ Root route
