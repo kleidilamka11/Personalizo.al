@@ -1,4 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, func
+from sqlalchemy.orm import relationship
+
 
 # Use the shared Base defined in app.db
 
