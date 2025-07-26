@@ -25,3 +25,7 @@ class User(Base):
 
     # Check if user is admin - default is false
     is_admin = Column(Boolean, default=False)
+
+    #check order
+    orders = relationship("Order", back_populates="user")
+
