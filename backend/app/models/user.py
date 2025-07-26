@@ -1,5 +1,7 @@
-# Importing base tools from SQLAlchemy
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, func
+
+# Use the shared Base defined in app.db
+
 from app.db import Base
 
 # This defines our User table in the database
