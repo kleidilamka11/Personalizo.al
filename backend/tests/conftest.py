@@ -3,15 +3,24 @@ import importlib
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 import pytest
+import sys
+from pathlib import Path
+
+# Ensure the backend directory is on sys.path so that "import app" works even
+# when tests are invoked from the repository root.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 
 @pytest.fixture
-def client(tmp_path):
+def db(tmp_path):
     os.environ.setdefault("SECRET_KEY", "testsecret")
     os.environ.setdefault("ALGORITHM", "HS256")
 
     from app import db as db_module
     db_file = tmp_path / "test.db"
-    engine = sqlalchemy.create_engine(f"sqlite:///{db_file}", connect_args={"check_same_thread": False})
+    engine = sqlalchemy.create_engine(
+        f"sqlite:///{db_file}", connect_args={"check_same_thread": False}
+    )
     TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db_module.engine = engine
     db_module.SessionLocal = TestingSessionLocal
@@ -19,6 +28,15 @@ def client(tmp_path):
     from app.db import Base
     Base.metadata.create_all(bind=engine)
 
+    session = TestingSessionLocal()
+    try:
+        yield session
+    finally:
+        session.close()
+
+
+@pytest.fixture
+def client(db):
     import app.main as main_module
     importlib.reload(main_module)
 
