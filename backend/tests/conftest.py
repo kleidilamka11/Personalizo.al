@@ -16,7 +16,7 @@ def client(tmp_path):
     db_module.engine = engine
     db_module.SessionLocal = TestingSessionLocal
 
-    from app.models.user import Base
+    from app.db import Base
     Base.metadata.create_all(bind=engine)
 
     import app.main as main_module
