@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from typing import List
 from app.schemas.song import SongCreate, SongResponse
 from app.models.song import Song
 from app.models.order import Order
+from app.models.user import User
 from app.db import get_db
-from typing import List
+from app.core.security import get_current_user
 
 router = APIRouter(prefix="/songs", tags=["Songs"])
 
@@ -25,6 +27,11 @@ def create_song(song: SongCreate, db: Session = Depends(get_db)):
     return new_song
 
 
+@router.get("/", response_model=List[SongResponse])
+def list_songs(db: Session = Depends(get_db)):
+    return db.query(Song).all()
+
+
 @router.get("/{order_id}", response_model=SongResponse)
 def get_song_by_order(order_id: int, db: Session = Depends(get_db)):
     song = db.query(Song).filter(Song.order_id == order_id).first()
@@ -33,6 +40,15 @@ def get_song_by_order(order_id: int, db: Session = Depends(get_db)):
     return song
 
 
-@router.get("/", response_model=List[SongResponse])
-def list_songs(db: Session = Depends(get_db)):
-    return db.query(Song).all()
+@router.get("/me", response_model=List[SongResponse])
+def get_my_songs(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    songs = (
+        db.query(Song)
+        .join(Order)
+        .filter(Order.user_id == current_user.id)
+        .all()
+    )
+    return songs
