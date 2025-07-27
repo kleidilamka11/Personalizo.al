@@ -21,3 +21,4 @@ class SongResponse(SongBase):
     model_config = {
         "from_attributes": True
     }
+
