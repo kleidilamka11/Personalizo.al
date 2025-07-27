@@ -32,14 +32,6 @@ def list_songs(db: Session = Depends(get_db)):
     return db.query(Song).all()
 
 
-@router.get("/{order_id}", response_model=SongResponse)
-def get_song_by_order(order_id: int, db: Session = Depends(get_db)):
-    song = db.query(Song).filter(Song.order_id == order_id).first()
-    if not song:
-        raise HTTPException(status_code=404, detail="Song not found")
-    return song
-
-
 @router.get("/me", response_model=List[SongResponse])
 def get_my_songs(
     db: Session = Depends(get_db),
@@ -52,3 +44,11 @@ def get_my_songs(
         .all()
     )
     return songs
+
+
+@router.get("/{order_id}", response_model=SongResponse)
+def get_song_by_order(order_id: int, db: Session = Depends(get_db)):
+    song = db.query(Song).filter(Song.order_id == order_id).first()
+    if not song:
+        raise HTTPException(status_code=404, detail="Song not found")
+    return song
