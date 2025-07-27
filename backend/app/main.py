@@ -8,6 +8,10 @@ from app.routes import song_package
 from app.routes import order
 from app.routes import song  
 from app.routes import admin_orders
+from fastapi.staticfiles import StaticFiles
+from app.routes import admin_songs
+
+
 
 
 
@@ -33,9 +37,16 @@ app.include_router(order.router)
 
 app.include_router(song.router)
 
-# ✅ Admin Orders routers
+# ✅ Admin routers
 
 app.include_router(admin_orders.router)
+app.include_router(admin_songs.router)
+
+
+# Serve uploaded song files from /media/
+app.mount("/media", StaticFiles(directory="media"), name="media")
+
+
 
 
 

@@ -22,3 +22,15 @@ class SongResponse(SongBase):
         "from_attributes": True
     }
 
+
+class SongUploadResponse(BaseModel):
+    id: int
+    order_id: int
+    title: str
+    genre: str
+    duration_seconds: Optional[int]
+    file_url: str
+
+    model_config = {
+        "from_attributes": True
+    }
