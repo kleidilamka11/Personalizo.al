@@ -10,8 +10,8 @@ from app.routes import song
 from app.routes import admin_orders
 from fastapi.staticfiles import StaticFiles
 from app.routes import admin_songs
-
-
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 
 
@@ -22,6 +22,14 @@ app = FastAPI()
 
 # ✅ Create tables
 Base.metadata.create_all(bind=engine)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # ✅ Auth routers
 app.include_router(auth.router)
