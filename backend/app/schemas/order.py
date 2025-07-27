@@ -22,5 +22,6 @@ class OrderResponse(OrderBase):
     status: OrderStatus
     delivered_url: Optional[str]
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }
