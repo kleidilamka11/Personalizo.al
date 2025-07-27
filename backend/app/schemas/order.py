@@ -38,7 +38,7 @@ class UserPreview(BaseModel):
 
 class PackagePreview(BaseModel):
     id: int
-    title: str
+    name: str
 
 # ---------- Admin Order Out ----------
 class AdminOrderOut(BaseModel):
