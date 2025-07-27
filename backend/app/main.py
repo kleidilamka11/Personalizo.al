@@ -52,7 +52,8 @@ app.include_router(admin_songs.router)
 
 
 # Serve uploaded song files from /media/
-app.mount("/media", StaticFiles(directory="media"), name="media")
+# Allow the directory to be missing during startup (tests may create it later)
+app.mount("/media", StaticFiles(directory="media", check_dir=False), name="media")
 
 
 
