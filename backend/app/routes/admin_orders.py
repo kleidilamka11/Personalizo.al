@@ -36,7 +36,7 @@ def get_all_orders(
             delivered_url=o.delivered_url,
             created_at=o.created_at,
             user={"id": o.user.id, "email": o.user.email},
-            package={"id": o.package.id, "title": o.package.title},
+            package={"id": o.song_package.id, "title": o.song_package.title},
         )
         for o in orders
     ]
