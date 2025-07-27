@@ -21,7 +21,7 @@ def create_song_package(
     if existing:
         raise HTTPException(status_code=400, detail="Tier already exists.")
 
-    new_package = SongPackage(**payload.dict())
+    new_package = SongPackage(**payload.model_dump())
     db.add(new_package)
     db.commit()
     db.refresh(new_package)

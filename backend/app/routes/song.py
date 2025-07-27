@@ -18,7 +18,7 @@ def create_song(song: SongCreate, db: Session = Depends(get_db)):
     if db.query(Song).filter(Song.order_id == song.order_id).first():
         raise HTTPException(status_code=400, detail="Song already exists for this order")
 
-    new_song = Song(**song.dict())
+    new_song = Song(**song.model_dump())
     db.add(new_song)
     db.commit()
     db.refresh(new_song)
