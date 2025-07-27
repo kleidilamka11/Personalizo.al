@@ -7,6 +7,8 @@ from fastapi.openapi.utils import get_openapi
 from app.routes import song_package 
 from app.routes import order
 from app.routes import song  
+from app.routes import admin_orders
+
 
 
 
@@ -30,6 +32,11 @@ app.include_router(order.router)
 # ✅ Song Package routers
 
 app.include_router(song.router)
+
+# ✅ Admin Orders routers
+
+app.include_router(admin_orders.router)
+
 
 
 
