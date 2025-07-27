@@ -14,10 +14,9 @@ This repository contains a simple demo project with a Python backend and a React
 Use a virtual environment and install packages from `backend/requirements.txt`:
 
 ```bash
-cd backend
 python -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip install -r backend/requirements.txt
 ```
 
 ### Node (frontend)
