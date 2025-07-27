@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Enum, Text
+from sqlalchemy import Column, Integer, String, ForeignKey, Enum, Text, DateTime, func
 from sqlalchemy.orm import relationship
 from app.db import Base
 import enum
@@ -25,6 +25,7 @@ class Order(Base):
 
     status = Column(Enum(OrderStatus), default=OrderStatus.pending)
     delivered_url = Column(String, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     # relationships
     user = relationship("User", back_populates="orders")
