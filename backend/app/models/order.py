@@ -3,7 +3,6 @@ from sqlalchemy.orm import relationship
 from app.db import Base
 import enum
 # Add this import at the top:
-from sqlalchemy.orm import relationship
 
 
 
