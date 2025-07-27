@@ -1,21 +1,7 @@
 import uuid
 from fastapi import status
 
-def register_user(client, email=None, username=None, password="password", is_admin=False):
-    email = email or f"{uuid.uuid4()}@example.com"
-    username = username or f"user_{uuid.uuid4().hex[:8]}"
-    response = client.post(
-        "/auth/register",
-        json={"email": email, "username": username, "password": password, "is_admin": is_admin},
-    )
-    assert response.status_code == status.HTTP_200_OK
-    return response.json()
-
-
-def login_user(client, email, password="password"):
-    response = client.post("/auth/login", json={"email": email, "password": password})
-    assert response.status_code == status.HTTP_200_OK
-    return response.json()
+from .utils import register_user, login_user
 
 
 def test_auth_flow(client):
