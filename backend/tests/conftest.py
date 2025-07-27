@@ -5,10 +5,14 @@ from sqlalchemy.orm import sessionmaker
 import pytest
 import sys
 from pathlib import Path
+import warnings
 
 # Ensure the backend directory is on sys.path so that "import app" works even
 # when tests are invoked from the repository root.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+# Silence deprecation warnings from third-party libraries
+warnings.filterwarnings("ignore", category=DeprecationWarning, module="passlib")
 
 
 @pytest.fixture
