@@ -2,6 +2,10 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Enum, Text
 from sqlalchemy.orm import relationship
 from app.db import Base
 import enum
+# Add this import at the top:
+from sqlalchemy.orm import relationship
+
+
 
 class OrderStatus(str, enum.Enum):
     pending = "pending"
@@ -15,6 +19,8 @@ class Order(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     song_package_id = Column(Integer, ForeignKey("song_packages.id"), nullable=False)
+    song = relationship("Song", back_populates="order", uselist=False)
+
 
     recipient_name = Column(String, nullable=False)
     mood = Column(String, nullable=False)
