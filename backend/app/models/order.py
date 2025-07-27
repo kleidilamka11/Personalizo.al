@@ -2,8 +2,6 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Enum, Text
 from sqlalchemy.orm import relationship
 from app.db import Base
 import enum
-# Add this import at the top:
-
 
 
 class OrderStatus(str, enum.Enum):
