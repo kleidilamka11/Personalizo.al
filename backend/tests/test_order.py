@@ -62,8 +62,21 @@ def test_create_order_invalid_package(client):
 
 
 def test_update_order(client):
-    order = create_order(client)
-    header = auth_header(client)
+    user = register_user(client)
+    tokens = login_user(client, user["email"])
+    header = {"Authorization": f"Bearer {tokens['access_token']}"}
+
+    package = create_package(client, "tier-order")
+    payload = {
+        "song_package_id": package["id"],
+        "recipient_name": "SongUser",
+        "mood": "happy",
+        "facts": "likes singing",
+    }
+    res = client.post("/orders/", json=payload, headers=header)
+    assert res.status_code == status.HTTP_200_OK
+    order = res.json()
+
     update_payload = {"mood": "excited", "facts": "new facts"}
     res = client.patch(f"/orders/{order['id']}", json=update_payload, headers=header)
     assert res.status_code == status.HTTP_200_OK
@@ -82,8 +95,21 @@ def test_update_order_not_owner(client):
 
 
 def test_cancel_order(client):
-    order = create_order(client)
-    header = auth_header(client)
+    user = register_user(client)
+    tokens = login_user(client, user["email"])
+    header = {"Authorization": f"Bearer {tokens['access_token']}"}
+
+    package = create_package(client, "tier-order")
+    payload = {
+        "song_package_id": package["id"],
+        "recipient_name": "SongUser",
+        "mood": "happy",
+        "facts": "likes singing",
+    }
+    res = client.post("/orders/", json=payload, headers=header)
+    assert res.status_code == status.HTTP_200_OK
+    order = res.json()
+
     res = client.post(f"/orders/{order['id']}/cancel", headers=header)
     assert res.status_code == status.HTTP_200_OK
     assert res.json()["status"] == "cancelled"
@@ -91,7 +117,22 @@ def test_cancel_order(client):
 
 def test_cancel_order_delivered(client):
     ensure_media_dir()
-    order = create_order(client)
+
+    user = register_user(client)
+    tokens = login_user(client, user["email"])
+    user_header = {"Authorization": f"Bearer {tokens['access_token']}"}
+
+    package = create_package(client, "tier-order")
+    payload = {
+        "song_package_id": package["id"],
+        "recipient_name": "SongUser",
+        "mood": "happy",
+        "facts": "likes singing",
+    }
+    res = client.post("/orders/", json=payload, headers=user_header)
+    assert res.status_code == status.HTTP_200_OK
+    order = res.json()
+
     header_admin = admin_header(client)
     data = {
         "order_id": order["id"],
@@ -102,6 +143,5 @@ def test_cancel_order_delivered(client):
     files = {"file": ("song.mp3", io.BytesIO(b"abc"), "audio/mp3")}
     client.post("/admin/songs/", data=data, files=files, headers=header_admin)
 
-    user_header = auth_header(client)
     res = client.post(f"/orders/{order['id']}/cancel", headers=user_header)
     assert res.status_code == status.HTTP_400_BAD_REQUEST
