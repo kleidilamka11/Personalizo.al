@@ -34,3 +34,11 @@ class SongUploadResponse(BaseModel):
     model_config = {
         "from_attributes": True
     }
+
+
+class SongUpdate(BaseModel):
+    order_id: int | None = None
+    title: str | None = None
+    genre: str | None = None
+    duration_seconds: int | None = None
+    file_path: str | None = None

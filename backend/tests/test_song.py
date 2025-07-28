@@ -103,3 +103,34 @@ def test_get_my_songs(client):
 def test_get_my_songs_requires_auth(client):
     res = client.get("/songs/me")
     assert res.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+def test_update_and_delete_song(client):
+    order = create_order(client)
+    song_payload = {
+        "order_id": order["id"],
+        "title": "Original",
+        "genre": "pop",
+        "duration_seconds": 45,
+        "file_path": "orig.mp3",
+    }
+    res = client.post("/songs/", json=song_payload)
+    assert res.status_code == status.HTTP_200_OK
+    song = res.json()
+
+    update_payload = {
+        "title": "Updated",
+        "genre": "rock",
+        "duration_seconds": 60,
+        "file_path": "upd.mp3",
+    }
+    res = client.put(f"/songs/{song['id']}", json=update_payload)
+    assert res.status_code == status.HTTP_200_OK
+    updated = res.json()
+    assert updated["title"] == "Updated"
+
+    res = client.delete(f"/songs/{song['id']}")
+    assert res.status_code == status.HTTP_204_NO_CONTENT
+
+    res = client.get(f"/songs/{order['id']}")
+    assert res.status_code == status.HTTP_404_NOT_FOUND

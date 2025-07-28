@@ -14,3 +14,12 @@ class SongPackageResponse(SongPackageBase):
     model_config = {
         "from_attributes": True
     }
+
+
+class SongPackageUpdate(BaseModel):
+    tier: str | None = None
+    name: str | None = None
+    description: str | None = None
+    price_eur: int | None = None
+    duration_seconds: int | None = None
+    commercial_use: bool | None = None
