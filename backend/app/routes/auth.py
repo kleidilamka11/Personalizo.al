@@ -1,9 +1,15 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from app.db import get_db
 from app.models.user import User
-from app.schemas.auth import UserCreate, UserResponse, LoginRequest, TokenResponse
+from app.schemas.auth import (
+    UserCreate,
+    UserResponse,
+    LoginRequest,
+    TokenResponse,
+    UserUpdate,
+)
 from app.core.security import (
     hash_password, verify_password, create_access_token,
     create_refresh_token, get_current_user
@@ -108,5 +114,59 @@ def refresh_token(data: RefreshTokenRequest, db: Session = Depends(get_db)):
         "refresh_token": new_refresh_token,
         "token_type": "bearer"
     }
+
+
+# Update current user's profile
+@router.put("/me", response_model=UserResponse)
+def update_me(
+    payload: UserUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if payload.email and payload.email != current_user.email:
+        if db.query(User).filter(User.email == payload.email).first():
+            raise HTTPException(status_code=400, detail="Email already taken")
+        current_user.email = payload.email
+
+    if payload.username and payload.username != current_user.username:
+        if db.query(User).filter(User.username == payload.username).first():
+            raise HTTPException(status_code=400, detail="Username already taken")
+        current_user.username = payload.username
+
+    if payload.password:
+        current_user.hashed_password = hash_password(payload.password)
+
+    db.commit()
+    db.refresh(current_user)
+    return current_user
+
+
+class PasswordChangeRequest(BaseModel):
+    current_password: str
+    new_password: str
+
+
+@router.put("/password")
+def change_password(
+    data: PasswordChangeRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if not verify_password(data.current_password, current_user.hashed_password):
+        raise HTTPException(status_code=400, detail="Incorrect password")
+
+    current_user.hashed_password = hash_password(data.new_password)
+    db.commit()
+    return {"detail": "Password updated"}
+
+
+@router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
+def delete_me(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    db.delete(current_user)
+    db.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
