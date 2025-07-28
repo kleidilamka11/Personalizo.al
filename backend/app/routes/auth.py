@@ -25,6 +25,7 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from jose import jwt, JWTError
 from app.core.config import settings
+from app.core.email import send_email
 from pydantic import BaseModel
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -200,6 +201,12 @@ def request_verification(
         raise HTTPException(status_code=404, detail="User not found")
     user.verification_token = str(uuid.uuid4())
     db.commit()
+    verify_url = f"https://example.com/verify?token={user.verification_token}"
+    send_email(
+        to=user.email,
+        subject="Verify your account",
+        body=f"Click the link to verify your account: {verify_url}",
+    )
     return {"token": user.verification_token}
 
 
@@ -232,6 +239,12 @@ def password_reset_request(
     user.reset_token = str(uuid.uuid4())
     user.reset_token_expires = datetime.now(timezone.utc) + timedelta(hours=1)
     db.commit()
+    reset_url = f"https://example.com/reset?token={user.reset_token}"
+    send_email(
+        to=user.email,
+        subject="Password reset",
+        body=f"Reset your password using this link: {reset_url}",
+    )
     return {"token": user.reset_token}
 
 
