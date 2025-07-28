@@ -243,7 +243,12 @@ def password_reset(
     _: None = Depends(limiter),
 ):
     user = db.query(User).filter(User.reset_token == data.token).first()
-    if not user or not user.reset_token_expires or user.reset_token_expires < datetime.now(timezone.utc):
+    if not user or not user.reset_token_expires:
+        raise HTTPException(status_code=400, detail="Invalid token")
+    expires = user.reset_token_expires
+    if expires.tzinfo is None:
+        expires = expires.replace(tzinfo=timezone.utc)
+    if expires < datetime.now(timezone.utc):
         raise HTTPException(status_code=400, detail="Invalid token")
     user.hashed_password = hash_password(data.new_password)
     user.reset_token = None
