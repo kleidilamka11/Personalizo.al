@@ -66,8 +66,9 @@ async def upload_song(
         )
         db.add(song)
 
-        # 7. Mark order as delivered
+        # 7. Mark order as delivered and store url
         order.status = "delivered"
+        order.delivered_url = f"/media/songs/{filename}"
 
         db.commit()
         db.refresh(song)
