@@ -79,3 +79,71 @@ def test_login_invalid_credentials(client):
 def test_refresh_invalid_token(client):
     res = client.post("/auth/refresh", json={"refresh_token": "bad"})
     assert res.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+def test_update_profile(client):
+    user = register_user(client)
+    tokens = login_user(client, user["email"])
+    header = {"Authorization": f"Bearer {tokens['access_token']}"}
+
+    new_email = f"{uuid.uuid4()}@example.com"
+    new_username = f"user_{uuid.uuid4().hex[:8]}"
+    res = client.put(
+        "/auth/me",
+        json={"email": new_email, "username": new_username},
+        headers=header,
+    )
+    assert res.status_code == status.HTTP_200_OK
+    data = res.json()
+    assert data["email"] == new_email
+    assert data["username"] == new_username
+
+
+def test_update_profile_requires_auth(client):
+    res = client.put("/auth/me", json={"email": "x@example.com"})
+    assert res.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+def test_change_password(client):
+    user = register_user(client)
+    tokens = login_user(client, user["email"])
+    header = {"Authorization": f"Bearer {tokens['access_token']}"}
+
+    res = client.put(
+        "/auth/password",
+        json={"current_password": "password", "new_password": "newpass"},
+        headers=header,
+    )
+    assert res.status_code == status.HTTP_200_OK
+
+    login_res = client.post(
+        "/auth/login", json={"email": user["email"], "password": "newpass"}
+    )
+    assert login_res.status_code == status.HTTP_200_OK
+
+
+def test_change_password_requires_auth(client):
+    res = client.put(
+        "/auth/password",
+        json={"current_password": "password", "new_password": "new"},
+    )
+    assert res.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+def test_delete_account(client):
+    user = register_user(client)
+    tokens = login_user(client, user["email"])
+    header = {"Authorization": f"Bearer {tokens['access_token']}"}
+
+    res = client.delete("/auth/me", headers=header)
+    assert res.status_code == status.HTTP_204_NO_CONTENT
+
+    login_res = client.post(
+        "/auth/login", json={"email": user["email"], "password": "password"}
+    )
+    assert login_res.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+def test_delete_account_requires_auth(client):
+    res = client.delete("/auth/me")
+    assert res.status_code == status.HTTP_401_UNAUTHORIZED
