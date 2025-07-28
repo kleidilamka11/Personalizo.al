@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, Response, status, Request
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from app.db import get_db
@@ -11,6 +11,7 @@ from app.schemas.auth import (
     VerifyRequest,
     PasswordResetRequest,
     PasswordResetConfirm,
+    UserUpdate,
 )
 from app.core.security import (
     hash_password,
@@ -22,21 +23,14 @@ from app.core.security import (
 from app.core.limiter import RateLimiter
 import uuid
 from datetime import datetime, timedelta, timezone
-import os
 from jose import jwt, JWTError
 from app.core.config import settings
 from pydantic import BaseModel
 
-
 router = APIRouter(prefix="/auth", tags=["auth"])
-
-# Simple global rate limiter applied to auth-related endpoints
 limiter = RateLimiter(max_requests=5, window_seconds=60)
 
 
-
-
-# ✅ Register route
 @router.post("/register", response_model=UserResponse)
 def register(
     user_data: UserCreate,
@@ -55,10 +49,8 @@ def register(
         username=user_data.username,
         hashed_password=hash_password(user_data.password),
         is_admin=user_data.is_admin,
+        verification_token=str(uuid.uuid4()),
     )
-
-    # generate a verification token for email confirmation
-    new_user.verification_token = str(uuid.uuid4())
 
     db.add(new_user)
     db.commit()
@@ -66,7 +58,6 @@ def register(
     return new_user
 
 
-# ✅ JSON login route (from frontend)
 @router.post("/login", response_model=TokenResponse)
 def login_user(
     login_data: LoginRequest,
@@ -80,7 +71,6 @@ def login_user(
 
     access_token = create_access_token(data={"sub": user.email})
     refresh_token = create_refresh_token(data={"sub": user.email})
-
     return {
         "access_token": access_token,
         "refresh_token": refresh_token,
@@ -88,7 +78,6 @@ def login_user(
     }
 
 
-# ✅ OAuth2 token route for Swagger UI login
 @router.post("/token", response_model=TokenResponse)
 def login_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
@@ -102,7 +91,6 @@ def login_token(
 
     access_token = create_access_token(data={"sub": user.email})
     refresh_token = create_refresh_token(data={"sub": user.email})
-
     return {
         "access_token": access_token,
         "refresh_token": refresh_token,
@@ -110,15 +98,67 @@ def login_token(
     }
 
 
-# ✅ Authenticated user info route
 @router.get("/me", response_model=UserResponse)
 def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 
+@router.put("/me", response_model=UserResponse)
+def update_me(
+    payload: UserUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if payload.email and payload.email != current_user.email:
+        if db.query(User).filter(User.email == payload.email).first():
+            raise HTTPException(status_code=400, detail="Email already taken")
+        current_user.email = payload.email
+
+    if payload.username and payload.username != current_user.username:
+        if db.query(User).filter(User.username == payload.username).first():
+            raise HTTPException(status_code=400, detail="Username already taken")
+        current_user.username = payload.username
+
+    if payload.password:
+        current_user.hashed_password = hash_password(payload.password)
+
+    db.commit()
+    db.refresh(current_user)
+    return current_user
+
+
+class PasswordChangeRequest(BaseModel):
+    current_password: str
+    new_password: str
+
+
+@router.put("/password")
+def change_password(
+    data: PasswordChangeRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if not verify_password(data.current_password, current_user.hashed_password):
+        raise HTTPException(status_code=400, detail="Incorrect password")
+
+    current_user.hashed_password = hash_password(data.new_password)
+    db.commit()
+    return {"detail": "Password updated"}
+
+
+@router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
+def delete_me(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    db.delete(current_user)
+    db.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
 
 class RefreshTokenRequest(BaseModel):
     refresh_token: str
+
 
 @router.post("/refresh", response_model=TokenResponse)
 def refresh_token(
@@ -141,15 +181,12 @@ def refresh_token(
 
     new_access_token = create_access_token(data={"sub": user.email})
     new_refresh_token = create_refresh_token(data={"sub": user.email})
-
     return {
         "access_token": new_access_token,
         "refresh_token": new_refresh_token,
         "token_type": "bearer"
     }
 
-
-# -------------------- Verification Endpoints --------------------
 
 @router.post("/request-verify")
 def request_verification(
@@ -182,8 +219,6 @@ def verify_account(
     return {"message": "verified"}
 
 
-# -------------------- Password Reset Endpoints --------------------
-
 @router.post("/password-reset-request")
 def password_reset_request(
     data: PasswordResetRequest,
@@ -215,5 +250,3 @@ def password_reset(
     user.reset_token_expires = None
     db.commit()
     return {"message": "password updated"}
-
-

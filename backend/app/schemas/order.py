@@ -21,6 +21,17 @@ class OrderBase(BaseModel):
 class OrderCreate(OrderBase):
     pass
 
+# ---------- Order Update ----------
+class OrderUpdate(BaseModel):
+    recipient_name: str | None = None
+    mood: str | None = None
+    facts: str | None = None
+
+
+# ---------- Order Cancel ----------
+class OrderCancel(BaseModel):
+    reason: str | None = None
+
 # ---------- Order Response ----------
 class OrderResponse(OrderBase):
     id: int

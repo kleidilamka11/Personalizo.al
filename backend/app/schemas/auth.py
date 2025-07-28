@@ -25,8 +25,8 @@ class UserResponse(BaseModel):
 
 # 🧾 Schema for the login request (what the user sends)
 class LoginRequest(BaseModel):
-    email: EmailStr         # User will log in with email
-    password: str           # Plaintext password they enter
+    email: EmailStr
+    password: str
 
 
 class TokenResponse(BaseModel):
@@ -46,3 +46,10 @@ class PasswordResetRequest(BaseModel):
 class PasswordResetConfirm(BaseModel):
     token: str
     new_password: str
+
+
+# Data for updating the authenticated user
+class UserUpdate(BaseModel):
+    email: Optional[EmailStr] = None
+    username: Optional[str] = None
+    password: Optional[str] = None
