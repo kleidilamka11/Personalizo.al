@@ -2,6 +2,7 @@ import uuid
 from fastapi import status
 
 from .utils import register_user, login_user
+from app.routes.auth import limiter
 
 
 def test_auth_flow(client):
@@ -79,6 +80,44 @@ def test_login_invalid_credentials(client):
 def test_refresh_invalid_token(client):
     res = client.post("/auth/refresh", json={"refresh_token": "bad"})
     assert res.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+def test_verification_flow(client):
+    user = register_user(client)
+    res = client.post("/auth/request-verify", json={"email": user["email"]})
+    assert res.status_code == status.HTTP_200_OK
+    token = res.json()["token"]
+
+    res = client.post("/auth/verify", json={"token": token})
+    assert res.status_code == status.HTTP_200_OK
+
+    tokens = login_user(client, user["email"])
+    auth_header = {"Authorization": f"Bearer {tokens['access_token']}"}
+    me = client.get("/auth/me", headers=auth_header)
+    assert me.json()["is_verified"] is True
+
+
+def test_password_reset_flow(client):
+    user = register_user(client)
+    res = client.post("/auth/password-reset-request", json={"email": user["email"]})
+    assert res.status_code == status.HTTP_200_OK
+    token = res.json()["token"]
+
+    res = client.post(
+        "/auth/password-reset", json={"token": token, "new_password": "newpass"}
+    )
+    assert res.status_code == status.HTTP_200_OK
+
+    tokens = login_user(client, user["email"], password="newpass")
+    assert tokens["access_token"]
+
+
+def test_rate_limit_login(client):
+    user = register_user(client)
+    for _ in range(5):
+        client.post("/auth/login", json={"email": user["email"], "password": "wrong"})
+    res = client.post("/auth/login", json={"email": user["email"], "password": "wrong"})
+    assert res.status_code == status.HTTP_429_TOO_MANY_REQUESTS
 
 
 def test_update_profile(client):

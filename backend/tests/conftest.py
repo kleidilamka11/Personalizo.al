@@ -6,6 +6,7 @@ import pytest
 import sys
 from pathlib import Path
 import warnings
+import app.routes.auth as auth_routes
 
 # Ensure the backend directory is on sys.path so that "import app" works even
 # when tests are invoked from the repository root.
@@ -46,3 +47,9 @@ def client(db):
 
     from fastapi.testclient import TestClient
     return TestClient(main_module.app)
+
+
+@pytest.fixture(autouse=True)
+def reset_rate_limiter():
+    yield
+    auth_routes.limiter.reset()

@@ -28,6 +28,11 @@ class User(Base):
     # Check if user is admin - default is false
     is_admin = Column(Boolean, default=False)
 
+    is_verified = Column(Boolean, default=False)
+    verification_token = Column(String, unique=True, nullable=True)
+    reset_token = Column(String, unique=True, nullable=True)
+    reset_token_expires = Column(DateTime(timezone=True), nullable=True)
+
     #check order
     orders = relationship("Order", back_populates="user")
 

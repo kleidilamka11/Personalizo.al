@@ -16,6 +16,7 @@ class UserResponse(BaseModel):
     email: EmailStr
     username: str
     is_admin: bool
+    is_verified: bool
 
     model_config = {
         "from_attributes": True  # ✅ Replaces orm_mode in Pydantic v2
@@ -24,14 +25,27 @@ class UserResponse(BaseModel):
 
 # 🧾 Schema for the login request (what the user sends)
 class LoginRequest(BaseModel):
-    email: EmailStr         # User will log in with email
-    password: str           # Plaintext password they enter
+    email: EmailStr
+    password: str
 
 
 class TokenResponse(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
+
+
+class VerifyRequest(BaseModel):
+    token: str
+
+
+class PasswordResetRequest(BaseModel):
+    email: EmailStr
+
+
+class PasswordResetConfirm(BaseModel):
+    token: str
+    new_password: str
 
 
 # Data for updating the authenticated user
