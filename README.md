@@ -47,3 +47,17 @@ npm test
 ```
 
 Both commands should execute the respective test suites (`pytest` for Python and `npm test` for React).
+
+## Email Configuration
+
+Account verification and password reset emails are sent using SMTP. Configure the
+following environment variables (e.g. in a `.env` file) for real email delivery:
+
+- `SMTP_HOST` – SMTP server hostname
+- `SMTP_PORT` – SMTP server port (default `587`)
+- `SMTP_USER` – username for SMTP authentication
+- `SMTP_PASSWORD` – password for SMTP authentication
+- `EMAIL_FROM` – address used as the "from" field
+
+If `SMTP_HOST` is not set, emails are printed to the console instead. This
+allows tests to run without an email server.
