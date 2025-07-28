@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 from typing import List
-from app.schemas.song import SongCreate, SongResponse
+from app.schemas.song import SongCreate, SongResponse, SongUpdate
 from app.models.song import Song
 from app.models.order import Order
 from app.models.user import User
@@ -25,6 +25,41 @@ def create_song(song: SongCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_song)
     return new_song
+
+
+@router.put("/{song_id}", response_model=SongResponse)
+def update_song(
+    song_id: int,
+    payload: SongUpdate,
+    db: Session = Depends(get_db),
+):
+    song = db.query(Song).filter(Song.id == song_id).first()
+    if not song:
+        raise HTTPException(status_code=404, detail="Song not found")
+
+    if payload.order_id is not None and payload.order_id != song.order_id:
+        order = db.query(Order).filter(Order.id == payload.order_id).first()
+        if not order:
+            raise HTTPException(status_code=404, detail="Order not found")
+        if db.query(Song).filter(Song.order_id == payload.order_id).first():
+            raise HTTPException(status_code=400, detail="Song already exists for this order")
+        song.order_id = payload.order_id
+
+    for field, value in payload.model_dump(exclude_unset=True, exclude={"order_id"}).items():
+        setattr(song, field, value)
+    db.commit()
+    db.refresh(song)
+    return song
+
+
+@router.delete("/{song_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_song(song_id: int, db: Session = Depends(get_db)):
+    song = db.query(Song).filter(Song.id == song_id).first()
+    if not song:
+        raise HTTPException(status_code=404, detail="Song not found")
+    db.delete(song)
+    db.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.get("/", response_model=List[SongResponse])
