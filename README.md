@@ -19,6 +19,14 @@ source venv/bin/activate
 pip install -r backend/requirements.txt
 ```
 
+After installing the dependencies, apply the database migrations so that the
+SQLite schema is up to date:
+
+```bash
+cd backend
+alembic upgrade head
+```
+
 ### Node (frontend)
 
 Install Node packages using npm:
