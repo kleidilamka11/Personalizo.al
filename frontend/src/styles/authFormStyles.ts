@@ -4,7 +4,8 @@ export const AuthContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* <- USE height not min-height here for full centering */
+  height: 100%; /* allow layout to control full screen height */
+  min-height: 100vh; /* fill the viewport on mobile */
   padding: 1rem;
   background-color: ${({ theme }) => theme.background};
 `
