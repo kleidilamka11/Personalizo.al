@@ -13,6 +13,9 @@ export const LayoutWrapper = styled.div`
 
 export const MainContent = styled.main`
   flex: 1;
+  display: flex; /* NEW */
+  align-items: center; /* NEW: vertical centering */
+  justify-content: center; /* NEW: horizontal centering */
   padding: 1.5rem;
   width: 100%;
   max-width: 600px;
@@ -22,3 +25,4 @@ export const MainContent = styled.main`
     padding: 2rem;
   }
 `
+

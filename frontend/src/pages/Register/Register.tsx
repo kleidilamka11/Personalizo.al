@@ -1,6 +1,12 @@
 import React, { useState } from 'react'
-import { Container } from './styles'
-import Button from '../../components/Button'
+import {
+  AuthContainer,
+  AuthCard,
+  FormGroup,
+  Input,
+  GradientButton,
+  Message,
+} from '../../styles/authFormStyles'
 import {
   register,
   requestVerification,
@@ -40,47 +46,54 @@ const Register = () => {
   }
 
   return (
-    <Container>
-      {!registered && (
-        <form onSubmit={handleRegister}>
-          <div>
-            <input
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div>
-            <input
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
-          <div>
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <Button label="Register" />
-        </form>
-      )}
-      {registered && !verified && (
-        <form onSubmit={handleVerify}>
-          <p>{message}</p>
-          <input
-            placeholder="Verification token"
-            value={token}
-            onChange={(e) => setToken(e.target.value)}
-          />
-          <Button label="Verify" />
-        </form>
-      )}
-      {verified && <p>{message}</p>}
-    </Container>
+    <AuthContainer>
+      <AuthCard>
+        {!registered && (
+          <form onSubmit={handleRegister}>
+            <FormGroup>
+              <Input
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Input
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </FormGroup>
+            <GradientButton type="submit">Register</GradientButton>
+          </form>
+        )}
+
+        {registered && !verified && (
+          <form onSubmit={handleVerify}>
+            <Message>{message}</Message>
+            <FormGroup>
+              <Input
+                placeholder="Verification token"
+                value={token}
+                onChange={(e) => setToken(e.target.value)}
+              />
+            </FormGroup>
+            <GradientButton type="submit">Verify</GradientButton>
+          </form>
+        )}
+
+        {verified && <Message>{message}</Message>}
+      </AuthCard>
+    </AuthContainer>
   )
 }
+
 export default Register
