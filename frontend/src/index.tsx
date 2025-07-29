@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { lightTheme, darkTheme } from './theme'
 import { AuthProvider } from './store/authContext'
+import './index.css'
 
 const Root = () => {
   const [isDarkMode, setIsDarkMode] = useState(true)
