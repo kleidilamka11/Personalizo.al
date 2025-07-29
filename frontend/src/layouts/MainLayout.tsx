@@ -1,6 +1,7 @@
 import React from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import { LayoutWrapper, MainContent } from './styles'
 
 type Props = {
   children: React.ReactNode
@@ -8,11 +9,11 @@ type Props = {
 
 const MainLayout: React.FC<Props> = ({ children }) => {
   return (
-    <>
+    <LayoutWrapper>
       <Header />
-      <main>{children}</main>
+      <MainContent>{children}</MainContent>
       <Footer />
-    </>
+    </LayoutWrapper>
   )
 }
 
