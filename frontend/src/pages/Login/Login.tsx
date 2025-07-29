@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   AuthContainer,
   AuthCard,
@@ -7,93 +8,54 @@ import {
   GradientButton,
   Message,
 } from '../../styles/authFormStyles'
-import {
-  register,
-  requestVerification,
-  verifyAccount,
-} from '../../services/authService'
+import { login } from '../../services/authService'
+import { saveToken } from '../../utils/token'
+import { useAuthContext } from '../../store/authContext'
 
-const Register = () => {
+const Login = () => {
   const [email, setEmail] = useState('')
-  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [token, setToken] = useState('')
-  const [registered, setRegistered] = useState(false)
-  const [verified, setVerified] = useState(false)
   const [message, setMessage] = useState('')
+  const navigate = useNavigate()
+  const { setIsAuthenticated } = useAuthContext()
 
-  const handleRegister = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await register(email, username, password)
-      const res = await requestVerification(email)
-      setRegistered(true)
-      setMessage(`Verification token: ${res.token}`)
+      const data = await login(email, password)
+      saveToken(data.access_token)
+      setIsAuthenticated(true)
+      navigate('/')
     } catch (err) {
-      setMessage('Registration failed')
-    }
-  }
-
-  const handleVerify = async (e: React.FormEvent) => {
-    e.preventDefault()
-    try {
-      await verifyAccount(token)
-      setVerified(true)
-      setMessage('Account verified!')
-    } catch (err) {
-      setMessage('Verification failed')
+      setMessage('Login failed')
     }
   }
 
   return (
     <AuthContainer>
       <AuthCard>
-        {!registered && (
-          <form onSubmit={handleRegister}>
-            <FormGroup>
-              <Input
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Input
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </FormGroup>
-            <GradientButton type="submit">Register</GradientButton>
-          </form>
-        )}
-
-        {registered && !verified && (
-          <form onSubmit={handleVerify}>
-            <Message>{message}</Message>
-            <FormGroup>
-              <Input
-                placeholder="Verification token"
-                value={token}
-                onChange={(e) => setToken(e.target.value)}
-              />
-            </FormGroup>
-            <GradientButton type="submit">Verify</GradientButton>
-          </form>
-        )}
-
-        {verified && <Message>{message}</Message>}
+        <form onSubmit={handleSubmit}>
+          <FormGroup>
+            <Input
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </FormGroup>
+          <GradientButton type="submit">Login</GradientButton>
+        </form>
+        {message && <Message>{message}</Message>}
       </AuthCard>
     </AuthContainer>
   )
 }
 
-export default Register
+export default Login
