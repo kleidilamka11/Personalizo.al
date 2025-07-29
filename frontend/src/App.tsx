@@ -1,13 +1,13 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import AppRoutes from './routes/AppRoutes'
+import MainLayout from './layouts/MainLayout'
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-     <p>Jari App is ready</p>
-    </div>
-  );
+    <MainLayout>
+      <AppRoutes />
+    </MainLayout>
+  )
 }
 
-export default App;
+export default App
