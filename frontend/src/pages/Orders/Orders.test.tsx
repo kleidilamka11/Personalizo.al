@@ -24,7 +24,7 @@ describe('Orders page', () => {
     render(<Orders />);
 
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
-    await waitFor(() => screen.getByText(/your orders/i));
+    await screen.findByText(/your orders/i);
 
     expect(screen.getByText(/package: Gold/i)).toBeInTheDocument();
     expect(screen.getByText(/Status: pending/i)).toBeInTheDocument();
