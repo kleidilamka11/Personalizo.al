@@ -32,7 +32,7 @@ describe('MySongs page', () => {
     render(<MySongs />);
 
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
-    await waitFor(() => screen.getByText(/your songs/i));
+    await screen.findByText(/your songs/i);
 
     expect(screen.getByText(/Title: Song A/i)).toBeInTheDocument();
     expect(screen.getByText(/Status: delivered/i)).toBeInTheDocument();
