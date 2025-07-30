@@ -27,6 +27,7 @@ describe('AdminOrders page', () => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     )
 
+    expect(screen.getByText(/Order ID: 1/)).toBeInTheDocument()
     expect(screen.getByText(/admin@test.com/i)).toBeInTheDocument()
     expect(screen.getByText(/Status: pending/i)).toBeInTheDocument()
   })
