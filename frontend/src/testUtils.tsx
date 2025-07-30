@@ -4,11 +4,14 @@ import { MemoryRouter } from 'react-router';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from './theme';
 import { AuthProvider } from './store/authContext';
+import { CartProvider } from './store/cartContext';
 
 const AllProviders: React.FC<{children: React.ReactNode}> = ({ children }) => (
   <MemoryRouter>
     <AuthProvider>
-      <ThemeProvider theme={lightTheme}>{children}</ThemeProvider>
+      <CartProvider>
+        <ThemeProvider theme={lightTheme}>{children}</ThemeProvider>
+      </CartProvider>
     </AuthProvider>
   </MemoryRouter>
 );
