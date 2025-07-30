@@ -16,6 +16,14 @@ router = APIRouter(prefix="/packages", tags=["Song Packages"])
 def get_song_packages(db: Session = Depends(get_db)):
     return db.query(SongPackage).all()
 
+
+@router.get("/{package_id}", response_model=SongPackageResponse)
+def get_package(package_id: int, db: Session = Depends(get_db)):
+    package = db.query(SongPackage).filter(SongPackage.id == package_id).first()
+    if not package:
+        raise HTTPException(status_code=404, detail="Song package not found")
+    return package
+
 @router.post("/", response_model=SongPackageResponse)
 def create_song_package(
     payload: SongPackageBase,

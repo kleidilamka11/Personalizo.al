@@ -63,3 +63,19 @@ def test_update_and_delete_package(client):
     res = client.get("/packages/")
     ids = [p["id"] for p in res.json()]
     assert pkg["id"] not in ids
+
+
+def test_get_package(client):
+    res = create_package(client, "get")
+    assert res.status_code == status.HTTP_200_OK
+    pkg = res.json()
+
+    res = client.get(f"/packages/{pkg['id']}")
+    assert res.status_code == status.HTTP_200_OK
+    data = res.json()
+    assert data["id"] == pkg["id"]
+
+
+def test_get_package_not_found(client):
+    res = client.get("/packages/9999")
+    assert res.status_code == status.HTTP_404_NOT_FOUND
