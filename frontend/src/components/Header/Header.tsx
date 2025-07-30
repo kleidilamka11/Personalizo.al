@@ -5,7 +5,7 @@ import { Container, Title, NavMenu, NavItem, LogoutButton } from './styles'
 
 const Header = () => {
   const navigate = useNavigate()
-  const { isAuthenticated, logout } = useAuthContext()
+  const { isAuthenticated, isAdmin, logout } = useAuthContext()
 
   const handleLogout = () => {
     logout()
@@ -22,6 +22,7 @@ const Header = () => {
         <NavItem to="/packages">Package</NavItem>
         {isAuthenticated ? (
           <>
+            {isAdmin && <NavItem to="/admin/orders">Admin</NavItem>}
             <NavItem to="/orders">Orders</NavItem>
             <NavItem to="/mysongs">My Songs</NavItem>
             <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
