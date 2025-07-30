@@ -76,7 +76,7 @@ const Orders = () => {
                     />
                     <a
                       data-testid="download-link"
-                      href={`${BACKEND_BASE_URL}${o.delivered_url}`}
+                      href={`${BACKEND_BASE_URL}/download${o.delivered_url}`}
                       download
                     >
                       Download
