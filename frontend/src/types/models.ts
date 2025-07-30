@@ -21,3 +21,13 @@ export interface Order {
   status: string
   delivered_url?: string | null
 }
+
+export interface Song {
+  id: number
+  order_id: number
+  title: string
+  genre: string
+  duration_seconds?: number | null
+  file_path: string
+  created_at: string
+}
