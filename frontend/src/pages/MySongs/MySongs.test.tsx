@@ -45,7 +45,7 @@ describe('MySongs page', () => {
     );
     expect(screen.getByTestId('download-link')).toHaveAttribute(
       'href',
-      `${BACKEND_BASE_URL}/file.mp3`,
+      `${BACKEND_BASE_URL}/download/file.mp3`,
     );
     expect(screen.getByTestId('download-link')).toHaveAttribute('download');
   });

@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from app.db import engine, Base
 from app.models import user  # ✅ Registers model
 from app.routes import auth
@@ -10,9 +10,8 @@ from app.routes import song
 from app.routes import admin_orders
 from fastapi.staticfiles import StaticFiles
 from app.routes import admin_songs
-from fastapi import FastAPI
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-from pathlib import Path
 from .db import BASE_DIR
 
 
@@ -70,6 +69,15 @@ app.mount("/media", StaticFiles(directory=str(media_dir), check_dir=False), name
 @app.get("/")
 def root():
     return {"message": "Welcome to Personalizo.al"}
+
+
+# Endpoint for authenticated file downloads
+@app.get("/download/{file_path:path}", include_in_schema=False)
+def download_media(file_path: str):
+    path = (BASE_DIR / file_path.lstrip("/")).resolve()
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="File not found")
+    return FileResponse(path, filename=path.name)
 
 # ✅ Custom OpenAPI with Bearer auth
 def custom_openapi():

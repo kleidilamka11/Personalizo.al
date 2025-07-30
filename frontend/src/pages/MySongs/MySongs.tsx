@@ -54,7 +54,7 @@ const MySongs = () => {
                   />
                   <a
                     data-testid="download-link"
-                    href={`${BACKEND_BASE_URL}${orders[s.order_id].delivered_url || ''}`}
+                    href={`${BACKEND_BASE_URL}/download${orders[s.order_id].delivered_url || ''}`}
                     download
                   >
                     Download
