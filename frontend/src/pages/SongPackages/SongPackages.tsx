@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import { Overlay, Modal, PackagesGrid, PackageCard } from './styles'
 import { getSongPackages } from '../../services/songPackageService'
 import { SongPackage } from '../../types/models'
+import { useCartContext } from '../../store/cartContext'
 
 const SongPackages = () => {
   const [packages, setPackages] = useState<SongPackage[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const navigate = useNavigate()
+  const { setPackage } = useCartContext()
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -31,6 +33,7 @@ const SongPackages = () => {
   }, [])
 
   const handleSelect = (id: number) => {
+    setPackage(null)
     navigate(`/packages/${id}`)
   }
 
