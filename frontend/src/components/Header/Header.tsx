@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { useAuthContext } from '../../store/authContext'
 import { Container, Title, NavMenu, NavItem, LogoutButton } from './styles'
 
