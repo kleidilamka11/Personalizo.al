@@ -1,17 +1,24 @@
 import React, { createContext, useContext, useState } from 'react'
+import { getToken, clearToken } from '../utils/token'
 
 type AuthContextType = {
   isAuthenticated: boolean
   setIsAuthenticated: (val: boolean) => void
+  logout: () => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(() => !!getToken())
+
+  const logout = () => {
+    clearToken()
+    setIsAuthenticated(false)
+  }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, logout }}>
       {children}
     </AuthContext.Provider>
   )

@@ -1,16 +1,14 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../../store/authContext'
-import { clearToken } from '../../utils/token'
 import { Container, Title, NavMenu, NavItem, LogoutButton } from './styles'
 
 const Header = () => {
   const navigate = useNavigate()
-  const { isAuthenticated, setIsAuthenticated } = useAuthContext()
+  const { isAuthenticated, logout } = useAuthContext()
 
   const handleLogout = () => {
-    clearToken()
-    setIsAuthenticated(false)
+    logout()
     navigate('/login')
   }
 
