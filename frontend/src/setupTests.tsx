@@ -7,14 +7,11 @@ import '@testing-library/jest-dom';
 
 // The test environment does not install real browser routing or HTTP libraries.
 // Provide lightweight mocks so components depending on these packages can load.
-jest.mock('react-router', () => {
+jest.mock('react-router-dom', () => {
   const actual = jest.requireActual('react-router-dom');
   const React = require('react');
   return {
     ...actual,
-    MemoryRouter: actual.MemoryRouter,
-    Routes: actual.Routes,
-    Route: actual.Route,
     NavLink: ({ to, children }: { to: string; children: React.ReactNode }) => (
       <a href={to}>{children}</a>
     ),

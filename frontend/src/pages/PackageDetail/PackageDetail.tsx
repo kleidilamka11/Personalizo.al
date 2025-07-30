@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Overlay, Modal, ActionButton } from './styles'
 import { getSongPackage } from '../../services/songPackageService'
 import { SongPackage } from '../../types/models'
