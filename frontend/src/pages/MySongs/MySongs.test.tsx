@@ -2,6 +2,7 @@ import MySongs from './MySongs';
 import { render, screen, waitFor } from '../../testUtils';
 import * as songService from '../../services/songService';
 import * as orderService from '../../services/orderService';
+import { BACKEND_BASE_URL } from '../../services/api';
 
 jest.mock('../../services/songService');
 jest.mock('../../services/orderService');
@@ -25,7 +26,7 @@ describe('MySongs page', () => {
         recipient_name: 'x',
         mood: 'y',
         status: 'delivered',
-        delivered_url: 'http://example.com/file.mp3',
+        delivered_url: '/file.mp3',
       },
     ]);
 
@@ -40,11 +41,11 @@ describe('MySongs page', () => {
     expect(screen.getByText(/Status: delivered/i)).toBeInTheDocument();
     expect(screen.getByTestId('audio-player')).toHaveAttribute(
       'src',
-      'http://example.com/file.mp3',
+      `${BACKEND_BASE_URL}/file.mp3`,
     );
     expect(screen.getByTestId('download-link')).toHaveAttribute(
       'href',
-      'http://example.com/file.mp3',
+      `${BACKEND_BASE_URL}/file.mp3`,
     );
     expect(screen.getByTestId('download-link')).toHaveAttribute('download');
   });

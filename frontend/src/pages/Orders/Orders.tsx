@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Container } from './styles'
 import { getOrders, cancelOrder } from '../../services/orderService'
 import { getSongPackages } from '../../services/songPackageService'
+import { BACKEND_BASE_URL } from '../../services/api'
 import { Order, SongPackage } from '../../types/models'
 
 const Orders = () => {
@@ -71,11 +72,11 @@ const Orders = () => {
                     <audio
                       data-testid="audio-player"
                       controls
-                      src={o.delivered_url}
+                      src={`${BACKEND_BASE_URL}${o.delivered_url}`}
                     />
                     <a
                       data-testid="download-link"
-                      href={o.delivered_url}
+                      href={`${BACKEND_BASE_URL}${o.delivered_url}`}
                       download
                     >
                       Download
