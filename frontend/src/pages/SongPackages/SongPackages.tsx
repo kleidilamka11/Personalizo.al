@@ -1,32 +1,36 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Overlay, Modal, PackagesGrid, PackageCard } from './styles'
-
-const packages = [
-  {
-    id: 'short',
-    name: 'Short & Sweet',
-    price: '€15',
-    description: '30–45s song\n1 verse + hook',
-  },
-  {
-    id: 'full',
-    name: 'Full Package',
-    price: '€29',
-    description: '60–75s song\nCustom tone, extra detail',
-  },
-  {
-    id: 'business',
-    name: 'Business Ad',
-    price: '€59–99',
-    description: 'Commercial jingle\nCustom beat rights',
-  },
-]
+import { getSongPackages } from '../../services/songPackageService'
+import { SongPackage } from '../../types/models'
 
 const SongPackages = () => {
+  const [packages, setPackages] = useState<SongPackage[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
   const navigate = useNavigate()
 
-  const handleSelect = (id: string) => {
+  useEffect(() => {
+    const fetchPackages = async () => {
+      try {
+        const data = await getSongPackages()
+        const mapped = data.map((p: any) => ({
+          id: p.id,
+          name: p.name,
+          price: p.price_eur,
+          description: p.description,
+        }))
+        setPackages(mapped)
+      } catch (err) {
+        setError('Failed to load packages')
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchPackages()
+  }, [])
+
+  const handleSelect = (id: number) => {
     navigate(`/packages/${id}`)
   }
 
@@ -34,11 +38,13 @@ const SongPackages = () => {
     <Overlay>
       <Modal>
         <h2>Select a Package</h2>
+        {loading && <p>Loading...</p>}
+        {error && <p>{error}</p>}
         <PackagesGrid>
           {packages.map((p) => (
             <PackageCard key={p.id} onClick={() => handleSelect(p.id)}>
               <h3>{p.name}</h3>
-              <p>{p.price}</p>
+              <p>€{p.price}</p>
               <small>{p.description}</small>
             </PackageCard>
           ))}
