@@ -43,7 +43,7 @@ def test_upload_song_success(client):
     assert orders.status_code == status.HTTP_200_OK
     admin_order = orders.json()[0]
     assert admin_order["status"] == "delivered"
-    assert admin_order["delivered_url"].startswith("/media/songs/")
+    assert admin_order["delivered_url"].startswith("http://localhost:8000/media/songs/")
 
 
 def test_upload_song_invalid_file_type(client):

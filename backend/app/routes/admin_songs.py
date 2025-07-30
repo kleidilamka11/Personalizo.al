@@ -10,6 +10,7 @@ from app.models.order import Order
 from app.schemas.song import SongUploadResponse
 from app.dependencies.auth import is_admin
 from app.models.user import User
+from app.core.config import settings
 
 router = APIRouter(prefix="/admin/songs", tags=["admin:songs"])
 
@@ -71,7 +72,7 @@ async def upload_song(
 
         # 7. Mark order as delivered and store url
         order.status = "delivered"
-        order.delivered_url = f"/media/songs/{filename}"
+        order.delivered_url = f"{settings.BASE_URL}/media/songs/{filename}"
 
         db.commit()
         db.refresh(song)
