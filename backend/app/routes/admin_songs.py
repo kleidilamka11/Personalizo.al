@@ -4,7 +4,7 @@ import os
 from uuid import uuid4
 import shutil
 
-from app.db import get_db
+from app.db import get_db, BASE_DIR
 from app.models.song import Song
 from app.models.order import Order
 from app.schemas.song import SongUploadResponse
@@ -50,11 +50,11 @@ async def upload_song(
 
     # 5. Save file to disk
     filename = f"song_{order_id}_{uuid4().hex}.mp3"
-    file_location = os.path.join("media", "songs", filename)
+    file_location = BASE_DIR / "media" / "songs" / filename
 
     try:
         # Ensure the destination directory exists so file writes don't fail
-        os.makedirs(os.path.dirname(file_location), exist_ok=True)
+        os.makedirs(file_location.parent, exist_ok=True)
 
         with open(file_location, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
@@ -65,7 +65,7 @@ async def upload_song(
             title=title,
             genre=genre,
             duration_seconds=duration_seconds,
-            file_path=file_location,
+            file_path=str(file_location),
         )
         db.add(song)
 

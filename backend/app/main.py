@@ -12,6 +12,8 @@ from fastapi.staticfiles import StaticFiles
 from app.routes import admin_songs
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pathlib import Path
+from .db import BASE_DIR
 
 
 
@@ -52,8 +54,11 @@ app.include_router(admin_songs.router)
 
 
 # Serve uploaded song files from /media/
+# Resolve the directory relative to the backend base so the app works
+# regardless of the current working directory.
+media_dir = BASE_DIR / "media"
 # Allow the directory to be missing during startup (tests may create it later)
-app.mount("/media", StaticFiles(directory="media", check_dir=False), name="media")
+app.mount("/media", StaticFiles(directory=str(media_dir), check_dir=False), name="media")
 
 
 
