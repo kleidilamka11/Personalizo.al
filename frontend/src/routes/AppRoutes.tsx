@@ -6,6 +6,8 @@ import Register from '../pages/Register'
 import Orders from '../pages/Orders'
 import SongPackages from '../pages/SongPackages'
 import Profile from '../pages/Profile'
+import About from '../pages/About'
+import MySongs from '../pages/MySongs'
 
 const AppRoutes = () => {
   return (
@@ -16,6 +18,8 @@ const AppRoutes = () => {
       <Route path="/orders" element={<Orders />} />
       <Route path="/packages" element={<SongPackages />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/mysongs" element={<MySongs />} />
     </Routes>
   )
 }
