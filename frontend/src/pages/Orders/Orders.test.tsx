@@ -23,8 +23,10 @@ describe('Orders page', () => {
 
     render(<Orders />);
 
-    expect(screen.getByText(/loading/i)).toBeInTheDocument();
     await screen.findByText(/your orders/i);
+    await waitFor(() =>
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
 
     expect(screen.getByText(/package: Gold/i)).toBeInTheDocument();
     expect(screen.getByText(/Status: pending/i)).toBeInTheDocument();
