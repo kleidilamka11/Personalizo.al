@@ -45,13 +45,20 @@ const MySongs = () => {
               <p>Title: {s.title}</p>
               <p>Status: {orders[s.order_id]?.status || 'unknown'}</p>
               {orders[s.order_id]?.delivered_url && (
-                <a
-                  href={orders[s.order_id].delivered_url || ''}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Listen
-                </a>
+                <div>
+                  <audio
+                    data-testid="audio-player"
+                    controls
+                    src={orders[s.order_id].delivered_url || ''}
+                  />
+                  <a
+                    data-testid="download-link"
+                    href={orders[s.order_id].delivered_url || ''}
+                    download
+                  >
+                    Download
+                  </a>
+                </div>
               )}
             </li>
           ))}

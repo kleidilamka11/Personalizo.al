@@ -57,17 +57,33 @@ const Orders = () => {
       ) : (
         <ul>
           {orders.map((o) => (
-            <li key={o.id} style={{ marginBottom: '1rem' }}>
-              <p>
-                Package:{' '}
-                {packages[o.song_package_id]?.name || o.song_package_id}
-              </p>
-              <p>Status: {o.status}</p>
-              {o.status === 'pending' && (
-                <button onClick={() => handleCancel(o.id)}>Cancel</button>
-              )}
-            </li>
-          ))}
+              <li key={o.id} style={{ marginBottom: '1rem' }}>
+                <p>
+                  Package:{' '}
+                  {packages[o.song_package_id]?.name || o.song_package_id}
+                </p>
+                <p>Status: {o.status}</p>
+                {o.status === 'pending' && (
+                  <button onClick={() => handleCancel(o.id)}>Cancel</button>
+                )}
+                {o.delivered_url && (
+                  <div>
+                    <audio
+                      data-testid="audio-player"
+                      controls
+                      src={o.delivered_url}
+                    />
+                    <a
+                      data-testid="download-link"
+                      href={o.delivered_url}
+                      download
+                    >
+                      Download
+                    </a>
+                  </div>
+                )}
+              </li>
+            ))}
         </ul>
       )}
     </Container>
