@@ -32,8 +32,9 @@ const AdminOrders = () => {
         <p>No orders found.</p>
       ) : (
         <ul>
-          {orders.map((o) => (
+            {orders.map((o) => (
             <li key={o.id} style={{ marginBottom: '1rem' }}>
+              <p>Order ID: {o.id}</p>
               <p>User: {o.user.email}</p>
               <p>Package: {o.package.name}</p>
               <p>Status: {o.status}</p>
