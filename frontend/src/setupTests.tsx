@@ -3,22 +3,18 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
-import { BrowserRouter } from "react-router";
 
 
 // The test environment does not install real browser routing or HTTP libraries.
 // Provide lightweight mocks so components depending on these packages can load.
 jest.mock('react-router', () => {
+  const actual = jest.requireActual('react-router-dom');
   const React = require('react');
   return {
-    MemoryRouter: ({ children }: { children: React.ReactNode }) => (
-      <div>{children}</div>
-    ),
-    BrowserRouter: ({ children }: { children: React.ReactNode }) => (
-      <div>{children}</div>
-    ),
-    Routes: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    Route: ({ element }: { element: React.ReactNode }) => <>{element}</>,
+    ...actual,
+    MemoryRouter: actual.MemoryRouter,
+    Routes: actual.Routes,
+    Route: actual.Route,
     NavLink: ({ to, children }: { to: string; children: React.ReactNode }) => (
       <a href={to}>{children}</a>
     ),
