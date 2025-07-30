@@ -36,6 +36,13 @@ cd frontend
 npm install
 ```
 
+The development server runs on port `8001`. Start it with:
+
+```bash
+npm start
+```
+and open [http://localhost:8001](http://localhost:8001) in your browser.
+
 ## Running Tests
 
 ### Backend tests
