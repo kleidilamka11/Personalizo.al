@@ -1,30 +1,52 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Overlay, Modal, ActionButton } from './styles'
-
-const packages = {
-  short: { name: 'Short & Sweet', desc: '30–45s song\n1 verse + hook' },
-  full: { name: 'Full Package', desc: '60–75s song\nCustom tone, extra detail' },
-  business: { name: 'Business Ad', desc: 'Commercial jingle\nCustom beat rights' },
-}
+import { getSongPackage } from '../../services/songPackageService'
+import { SongPackage } from '../../types/models'
+import { useCartContext } from '../../store/cartContext'
 
 const PackageDetail = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const pack = id ? packages[id as keyof typeof packages] : undefined
+  const { setPackage } = useCartContext()
+  const [pack, setPack] = useState<SongPackage | null>(null)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    const fetchPackage = async () => {
+      try {
+        if (id) {
+          const data = await getSongPackage(Number(id))
+          const mapped: SongPackage = {
+            id: data.id,
+            name: data.name,
+            price: data.price_eur,
+            description: data.description,
+          }
+          setPack(mapped)
+        }
+      } catch (err) {
+        setError('Failed to load package')
+      }
+    }
+    fetchPackage()
+  }, [id])
 
   if (!pack) {
-    return null
+    return <Overlay>{error || 'Loading...'}</Overlay>
+  }
+
+  const handleCustomize = () => {
+    setPackage(pack)
+    navigate(`/packages/${id}/create`)
   }
 
   return (
     <Overlay>
       <Modal>
         <h2>{pack.name}</h2>
-        <p>{pack.desc}</p>
-        <ActionButton onClick={() => navigate(`/packages/${id}/create`)}>
-          Customize Song
-        </ActionButton>
+        <p>{pack.description}</p>
+        <ActionButton onClick={handleCustomize}>Customize Song</ActionButton>
       </Modal>
     </Overlay>
   )
