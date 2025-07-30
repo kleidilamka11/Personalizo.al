@@ -52,3 +52,13 @@ export const PackageCard = styled.div`
     font-size: 0.8rem;
   }
 `
+
+export const CustomizeButton = styled.button`
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-radius: 6px;
+  background: ${({ theme }) => theme.primary};
+  color: #fff;
+  cursor: pointer;
+`

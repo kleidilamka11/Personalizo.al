@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { lightTheme, darkTheme } from './theme'
 import { AuthProvider } from './store/authContext'
+import { CartProvider } from './store/cartContext'
 import './index.css'
 
 const Root = () => {
@@ -13,9 +14,11 @@ const Root = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
-          <App />
-        </ThemeProvider>
+        <CartProvider>
+          <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+            <App />
+          </ThemeProvider>
+        </CartProvider>
       </AuthProvider>
     </BrowserRouter>
   )

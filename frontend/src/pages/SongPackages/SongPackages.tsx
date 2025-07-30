@@ -1,33 +1,40 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Overlay, Modal, PackagesGrid, PackageCard } from './styles'
+import { Overlay, Modal, PackagesGrid, PackageCard, CustomizeButton } from './styles'
+import { useCartContext } from '../../store/cartContext'
+import { SongPackage } from '../../types/models'
 
-const packages = [
+const packages: Array<SongPackage & { slug: string }> = [
   {
-    id: 'short',
+    id: 1,
+    slug: 'short',
     name: 'Short & Sweet',
-    price: '€15',
+    price: 15,
     description: '30–45s song\n1 verse + hook',
   },
   {
-    id: 'full',
+    id: 2,
+    slug: 'full',
     name: 'Full Package',
-    price: '€29',
+    price: 29,
     description: '60–75s song\nCustom tone, extra detail',
   },
   {
-    id: 'business',
+    id: 3,
+    slug: 'business',
     name: 'Business Ad',
-    price: '€59–99',
+    price: 59,
     description: 'Commercial jingle\nCustom beat rights',
   },
 ]
 
 const SongPackages = () => {
   const navigate = useNavigate()
+  const { setSelectedPackage } = useCartContext()
 
-  const handleSelect = (id: string) => {
-    navigate(`/packages/${id}`)
+  const handleCustomize = (pack: (typeof packages)[0]) => {
+    setSelectedPackage({ id: pack.id, name: pack.name, price: pack.price, description: pack.description })
+    navigate(`/packages/${pack.slug}/create`)
   }
 
   return (
@@ -36,10 +43,13 @@ const SongPackages = () => {
         <h2>Select a Package</h2>
         <PackagesGrid>
           {packages.map((p) => (
-            <PackageCard key={p.id} onClick={() => handleSelect(p.id)}>
+            <PackageCard key={p.id}>
               <h3>{p.name}</h3>
-              <p>{p.price}</p>
+              <p>€{p.price}</p>
               <small>{p.description}</small>
+              <CustomizeButton onClick={() => handleCustomize(p)}>
+                Customize Song
+              </CustomizeButton>
             </PackageCard>
           ))}
         </PackagesGrid>
