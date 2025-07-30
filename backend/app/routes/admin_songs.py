@@ -53,6 +53,9 @@ async def upload_song(
     file_location = os.path.join("media", "songs", filename)
 
     try:
+        # Ensure the destination directory exists so file writes don't fail
+        os.makedirs(os.path.dirname(file_location), exist_ok=True)
+
         with open(file_location, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
