@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   HeroSection,
   HeroTitle,
@@ -21,6 +22,7 @@ import {
 } from './styles'
 
 const Home = () => {
+  const navigate = useNavigate()
   return (
     <div>
       <HeroSection>
@@ -29,7 +31,7 @@ const Home = () => {
           Funny, romantic, emotional – fully personalized songs for any occasion. You tell the story. We write the anthem.
         </HeroSubtitle>
         <CTAContainer>
-          <CTAButton>Get a Song</CTAButton>
+          <CTAButton onClick={() => navigate('/packages')}>Get a Song</CTAButton>
           <OutlineButton>See Examples</OutlineButton>
         </CTAContainer>
       </HeroSection>
