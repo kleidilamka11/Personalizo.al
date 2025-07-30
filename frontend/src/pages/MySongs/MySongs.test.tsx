@@ -38,9 +38,14 @@ describe('MySongs page', () => {
 
     expect(screen.getByText(/Title: Song A/i)).toBeInTheDocument();
     expect(screen.getByText(/Status: delivered/i)).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /listen/i })).toHaveAttribute(
+    expect(screen.getByTestId('audio-player')).toHaveAttribute(
+      'src',
+      'http://example.com/file.mp3',
+    );
+    expect(screen.getByTestId('download-link')).toHaveAttribute(
       'href',
       'http://example.com/file.mp3',
     );
+    expect(screen.getByTestId('download-link')).toHaveAttribute('download');
   });
 });

@@ -16,6 +16,14 @@ describe('Orders page', () => {
         mood: 'happy',
         status: 'pending',
       },
+      {
+        id: 2,
+        song_package_id: 2,
+        recipient_name: 'Jane',
+        mood: 'sad',
+        status: 'delivered',
+        delivered_url: 'http://example.com/file.mp3',
+      },
     ]);
     (packageService.getSongPackages as jest.Mock).mockResolvedValue([
       { id: 2, name: 'Gold', price_eur: 10, description: 'desc' },
@@ -28,8 +36,18 @@ describe('Orders page', () => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    expect(screen.getByText(/package: Gold/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/package: Gold/i)).toHaveLength(2);
     expect(screen.getByText(/Status: pending/i)).toBeInTheDocument();
+    expect(screen.getByText(/Status: delivered/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /cancel/i })).toBeInTheDocument();
+    expect(screen.getByTestId('audio-player')).toHaveAttribute(
+      'src',
+      'http://example.com/file.mp3',
+    );
+    expect(screen.getByTestId('download-link')).toHaveAttribute(
+      'href',
+      'http://example.com/file.mp3',
+    );
+    expect(screen.getByTestId('download-link')).toHaveAttribute('download');
   });
 });
