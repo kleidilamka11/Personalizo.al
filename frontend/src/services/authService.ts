@@ -27,3 +27,30 @@ export const verifyAccount = async (token: string) => {
   const response = await api.post('/auth/verify', { token })
   return response.data
 }
+
+export const getMe = async () => {
+  const response = await api.get('/auth/me')
+  return response.data
+}
+
+export interface UpdateUserPayload {
+  email?: string
+  username?: string
+  password?: string
+}
+
+export const updateMe = async (payload: UpdateUserPayload) => {
+  const response = await api.put('/auth/me', payload)
+  return response.data
+}
+
+export const changePassword = async (
+  currentPassword: string,
+  newPassword: string,
+) => {
+  const response = await api.put('/auth/password', {
+    current_password: currentPassword,
+    new_password: newPassword,
+  })
+  return response.data
+}
