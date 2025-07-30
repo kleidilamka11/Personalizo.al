@@ -16,39 +16,16 @@ export const Modal = styled.div`
   padding: 2rem 1.5rem;
   border-radius: 12px;
   width: 100%;
-  max-width: 500px;
+  max-width: 400px;
   text-align: center;
 `
 
-export const PackagesGrid = styled.div`
+export const ActionButton = styled.button`
   margin-top: 1rem;
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: 1fr;
-
-  @media (min-width: 480px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-`
-
-export const PackageCard = styled.div`
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid #444;
-  padding: 1rem;
+  padding: 0.75rem 1rem;
   border-radius: 8px;
+  border: none;
+  background: ${({ theme }) => theme.primary};
+  color: #fff;
   cursor: pointer;
-
-  h3 {
-    margin: 0 0 0.25rem;
-    font-size: 1rem;
-  }
-
-  p {
-    margin: 0 0 0.25rem;
-    font-weight: bold;
-  }
-
-  small {
-    font-size: 0.8rem;
-  }
 `
