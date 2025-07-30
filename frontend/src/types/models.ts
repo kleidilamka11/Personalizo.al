@@ -3,6 +3,7 @@ export interface User {
   email: string
   username: string
   isVerified: boolean
+  is_admin?: boolean
 }
 
 export interface SongPackage {
@@ -30,4 +31,22 @@ export interface Song {
   duration_seconds?: number | null
   file_path: string
   created_at: string
+}
+
+export interface AdminOrder {
+  id: number
+  recipient_name: string
+  mood: string | null
+  facts: string | null
+  status: string
+  delivered_url?: string | null
+  created_at: string
+  user: {
+    id: number
+    email: string
+  }
+  package: {
+    id: number
+    name: string
+  }
 }

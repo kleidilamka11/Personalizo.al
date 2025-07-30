@@ -56,6 +56,10 @@ npm test
 
 Both commands should execute the respective test suites (`pytest` for Python and `npm test` for React).
 
+## Admin Interface
+
+If you log in as a user with `is_admin` set to `true`, the navigation now exposes links to view all orders and upload finished songs.  The new pages are available at `/admin/orders` and `/admin/upload`.
+
 ## Email Configuration
 
 Account verification and password reset emails are sent using SMTP. Configure the

@@ -8,7 +8,7 @@ import {
   GradientButton,
   Message,
 } from '../../styles/authFormStyles'
-import { login } from '../../services/authService'
+import { login, getMe } from '../../services/authService'
 import { saveToken } from '../../utils/token'
 import { useAuthContext } from '../../store/authContext'
 
@@ -17,14 +17,16 @@ const Login = () => {
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
   const navigate = useNavigate()
-  const { setIsAuthenticated } = useAuthContext()
+  const { setIsAuthenticated, setIsAdmin } = useAuthContext()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
       const data = await login(email, password)
       saveToken(data.access_token)
+      const me = await getMe()
       setIsAuthenticated(true)
+      setIsAdmin(me.is_admin)
       navigate('/')
     } catch (err) {
       setMessage('Login failed')
