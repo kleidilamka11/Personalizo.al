@@ -39,6 +39,18 @@ def test_song_package_flow(client):
     assert dup.status_code == status.HTTP_400_BAD_REQUEST
 
 
+def test_get_package_by_id(client):
+    res = create_package(client, "single")
+    assert res.status_code == status.HTTP_200_OK
+    pkg = res.json()
+
+    res = client.get(f"/packages/{pkg['id']}")
+    assert res.status_code == status.HTTP_200_OK
+    data = res.json()
+    assert data["id"] == pkg["id"]
+    assert data["tier"] == "single"
+
+
 def test_update_and_delete_package(client):
     res = create_package(client, "upd")
     assert res.status_code == status.HTTP_200_OK

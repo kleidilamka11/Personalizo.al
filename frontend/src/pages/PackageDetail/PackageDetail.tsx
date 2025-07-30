@@ -1,17 +1,26 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { getPackage } from '../../services/songPackageService'
+import { SongPackage } from '../../types/models'
 import { Overlay, Modal, ActionButton } from './styles'
-
-const packages = {
-  short: { name: 'Short & Sweet', desc: '30–45s song\n1 verse + hook' },
-  full: { name: 'Full Package', desc: '60–75s song\nCustom tone, extra detail' },
-  business: { name: 'Business Ad', desc: 'Commercial jingle\nCustom beat rights' },
-}
 
 const PackageDetail = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const pack = id ? packages[id as keyof typeof packages] : undefined
+  const [pack, setPack] = useState<SongPackage | null>(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!id) return
+      try {
+        const data = await getPackage(id)
+        setPack(data)
+      } catch {
+        setPack(null)
+      }
+    }
+    fetchData()
+  }, [id])
 
   if (!pack) {
     return null
@@ -21,7 +30,7 @@ const PackageDetail = () => {
     <Overlay>
       <Modal>
         <h2>{pack.name}</h2>
-        <p>{pack.desc}</p>
+        <p>{pack.description}</p>
         <ActionButton onClick={() => navigate(`/packages/${id}/create`)}>
           Customize Song
         </ActionButton>
