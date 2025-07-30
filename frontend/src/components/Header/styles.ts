@@ -28,3 +28,10 @@ export const NavItem = styled(NavLink)`
     border-bottom: 2px solid ${({ theme }) => theme.primary};
   }
 `
+
+export const LogoutButton = styled.button`
+  background: none;
+  border: none;
+  color: ${({ theme }) => theme.text};
+  cursor: pointer;
+`
