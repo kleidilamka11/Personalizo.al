@@ -67,6 +67,8 @@ Both commands should execute the respective test suites (`pytest` for Python and
 
 If you log in as a user with `is_admin` set to `true`, the navigation now exposes links to view all orders and upload finished songs.  The new pages are available at `/admin/orders` and `/admin/upload`.
 
+When a user registers for an account, the backend immediately emails a verification link to the provided address.
+
 ## Email Configuration
 
 Account verification and password reset emails are sent using SMTP. Configure the
