@@ -11,6 +11,7 @@ from app.schemas.song import SongUploadResponse
 from app.dependencies.auth import is_admin
 from app.models.user import User
 from app.core.config import settings
+from app.core.email import send_email
 
 router = APIRouter(prefix="/admin/songs", tags=["admin:songs"])
 
@@ -76,6 +77,16 @@ async def upload_song(
 
         db.commit()
         db.refresh(song)
+        db.refresh(order)
+
+        user = order.user
+        if user:
+            download_url = f"{settings.BASE_URL}/download{order.delivered_url}"
+            send_email(
+                to=user.email,
+                subject="Your Personalizo.al song is ready",
+                body=f"Your song is ready! Download it here: {download_url}",
+            )
 
         # 8. Return response
         return SongUploadResponse(
