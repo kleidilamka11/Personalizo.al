@@ -56,6 +56,12 @@ def register(
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+    verify_url = f"{settings.BASE_URL}/verify?token={new_user.verification_token}"
+    send_email(
+        to=new_user.email,
+        subject="Verify your account",
+        body=f"Click the link to verify your account: {verify_url}",
+    )
     return new_user
 
 

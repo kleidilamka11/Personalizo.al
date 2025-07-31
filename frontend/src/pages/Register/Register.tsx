@@ -7,11 +7,7 @@ import {
   GradientButton,
   Message,
 } from '../../styles/authFormStyles'
-import {
-  register,
-  requestVerification,
-  verifyAccount,
-} from '../../services/authService'
+import { register, verifyAccount } from '../../services/authService'
 
 const Register = () => {
   const [email, setEmail] = useState('')
@@ -26,9 +22,8 @@ const Register = () => {
     e.preventDefault()
     try {
       await register(email, username, password)
-      const res = await requestVerification(email)
       setRegistered(true)
-      setMessage(`Verification token: ${res.token}`)
+      setMessage('Check your email for a verification link')
     } catch (err) {
       setMessage('Registration failed')
     }
