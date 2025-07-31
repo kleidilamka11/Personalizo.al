@@ -43,6 +43,10 @@ npm start
 ```
 and open [http://localhost:8001](http://localhost:8001) in your browser.
 
+The API base URL is configurable via a `.env` file inside `frontend/`. Set
+`REACT_APP_BACKEND_BASE_URL` to the backend address before starting the
+development server. See `frontend/.env.example` for the default value.
+
 ## Running Tests
 
 ### Backend tests

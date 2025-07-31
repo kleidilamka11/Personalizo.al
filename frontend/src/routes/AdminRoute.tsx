@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom'
 import { useAuthContext } from '../store/authContext'
 
 interface Props {
-  children: React.JSX.Element
+  children: JSX.Element
 }
 
 const AdminRoute: React.FC<Props> = ({ children }) => {

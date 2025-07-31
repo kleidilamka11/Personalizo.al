@@ -3,12 +3,15 @@ import { Navigate } from 'react-router-dom'
 import { useAuthContext } from '../store/authContext'
 
 interface Props {
-  children: React.JSX.Element
+  children: JSX.Element
 }
 
-const ProtectedRoute: React.FC<Props> = ({ children }) => {
-  const { isAuthenticated } = useAuthContext()
-  return isAuthenticated ? children : <Navigate to="/login" replace />
+const AdminRoute: React.FC<Props> = ({ children }) => {
+  const { isAuthenticated, isAdmin } = useAuthContext()
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />
+  }
+  return isAdmin ? children : <Navigate to="/" replace />
 }
 
-export default ProtectedRoute
+export default AdminRoute
