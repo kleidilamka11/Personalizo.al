@@ -82,3 +82,10 @@ following environment variables (e.g. in a `.env` file) for real email delivery:
 
 If `SMTP_HOST` is not set, emails are printed to the console instead. This
 allows tests to run without an email server.
+
+## Rate Limiting
+
+The API now uses Redis to store rate limiting counters. Set the `REDIS_URL`
+environment variable to point to your Redis instance (defaults to
+`redis://localhost:6379/0`). Ensure Redis is running before starting the
+backend server.
