@@ -9,7 +9,7 @@ import {
   Message,
 } from '../../styles/authFormStyles'
 import { login, getMe } from '../../services/authService'
-import { saveToken } from '../../utils/token'
+import { saveTokens } from '../../utils/token'
 import { useAuthContext } from '../../store/authContext'
 
 const Login = () => {
@@ -23,7 +23,7 @@ const Login = () => {
     e.preventDefault()
     try {
       const data = await login(email, password)
-      saveToken(data.access_token)
+      saveTokens(data.access_token, data.refresh_token)
       const me = await getMe()
       setIsAuthenticated(true)
       setIsAdmin(me.is_admin)
