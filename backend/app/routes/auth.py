@@ -62,6 +62,9 @@ def register(
         subject="Verify your account",
         body=f"Click the link to verify your account: {verify_url}",
     )
+
+    print("Verification token:", new_user.verification_token)   # <− new statement
+
     return new_user
 
 
