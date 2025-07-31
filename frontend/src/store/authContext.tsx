@@ -1,5 +1,12 @@
-import React, { createContext, useContext, useState } from 'react'
-import { getToken, clearToken } from '../utils/token'
+import React, { createContext, useContext, useState, useEffect } from 'react'
+import {
+  getAccessToken,
+  getRefreshToken,
+  clearTokens,
+  saveTokens,
+  isTokenExpired,
+} from '../utils/token'
+import { getMe, refreshToken as refreshTokenRequest } from '../services/authService'
 
 type AuthContextType = {
   isAuthenticated: boolean
@@ -12,14 +19,54 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => !!getToken())
+  const [isAuthenticated, setIsAuthenticated] = useState(() => !!getAccessToken())
   const [isAdmin, setIsAdmin] = useState(false)
 
   const logout = () => {
-    clearToken()
+    clearTokens()
     setIsAuthenticated(false)
     setIsAdmin(false)
   }
+
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'test') return
+
+    const init = async () => {
+      let token = getAccessToken()
+      const refresh = getRefreshToken()
+
+      if (token && isTokenExpired(token)) {
+        if (refresh) {
+          try {
+            const data = await refreshTokenRequest(refresh)
+            saveTokens(data.access_token, data.refresh_token)
+            token = data.access_token
+          } catch {
+            logout()
+            return
+          }
+        } else {
+          logout()
+          return
+        }
+      }
+
+      if (token) {
+        try {
+          const me = await getMe()
+          setIsAuthenticated(true)
+          setIsAdmin(me.is_admin)
+        } catch {
+          logout()
+        }
+      }
+    }
+
+    init()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, isAdmin, setIsAdmin, logout }}>
