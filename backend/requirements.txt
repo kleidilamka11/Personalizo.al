@@ -6,3 +6,5 @@ passlib[bcrypt]
 python-dotenv
 pydantic-settings
 pytest
+pydantic[email]
+python-multipart==0.0.20
