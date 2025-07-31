@@ -13,6 +13,8 @@ import About from '../pages/About'
 import MySongs from '../pages/MySongs'
 import AdminOrders from '../pages/AdminOrders'
 import AdminUpload from '../pages/AdminUpload'
+import ProtectedRoute from './ProtectedRoute'
+import AdminRoute from './AdminRoute'
 
 const AppRoutes = () => {
   return (
@@ -20,16 +22,65 @@ const AppRoutes = () => {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/orders" element={<Orders />} />
+      <Route
+        path="/orders"
+        element={
+          <ProtectedRoute>
+            <Orders />
+          </ProtectedRoute>
+        }
+      />
       <Route path="/packages" element={<SongPackages />} />
       <Route path="/packages/:id" element={<PackageDetail />} />
-      <Route path="/packages/:id/create" element={<SongForm />} />
-      <Route path="/cart" element={<Cart />} />
-      <Route path="/profile" element={<Profile />} />
+      <Route
+        path="/packages/:id/create"
+        element={
+          <ProtectedRoute>
+            <SongForm />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/cart"
+        element={
+          <ProtectedRoute>
+            <Cart />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
       <Route path="/about" element={<About />} />
-      <Route path="/mysongs" element={<MySongs />} />
-      <Route path="/admin/orders" element={<AdminOrders />} />
-      <Route path="/admin/upload" element={<AdminUpload />} />
+      <Route
+        path="/mysongs"
+        element={
+          <ProtectedRoute>
+            <MySongs />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/orders"
+        element={
+          <AdminRoute>
+            <AdminOrders />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/upload"
+        element={
+          <AdminRoute>
+            <AdminUpload />
+          </AdminRoute>
+        }
+      />
     </Routes>
   )
 }

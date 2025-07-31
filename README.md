@@ -43,6 +43,10 @@ npm start
 ```
 and open [http://localhost:8001](http://localhost:8001) in your browser.
 
+The API base URL is configurable via a `.env` file inside `frontend/`. Set
+`REACT_APP_BACKEND_BASE_URL` to the backend address before starting the
+development server. See `frontend/.env.example` for the default value.
+
 ## Running Tests
 
 ### Backend tests
@@ -82,3 +86,10 @@ following environment variables (e.g. in a `.env` file) for real email delivery:
 
 If `SMTP_HOST` is not set, emails are printed to the console instead. This
 allows tests to run without an email server.
+
+## Rate Limiting
+
+The API now uses Redis to store rate limiting counters. Set the `REDIS_URL`
+environment variable to point to your Redis instance (defaults to
+`redis://localhost:6379/0`). Ensure Redis is running before starting the
+backend server.
