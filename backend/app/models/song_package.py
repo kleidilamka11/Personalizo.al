@@ -11,3 +11,4 @@ class SongPackage(Base):
     price_eur = Column(Integer, nullable=False)
     duration_seconds = Column(Integer, nullable=False)
     commercial_use = Column(Boolean, default=False)
+    lemon_squeezy_variant_id = Column(String, nullable=True)

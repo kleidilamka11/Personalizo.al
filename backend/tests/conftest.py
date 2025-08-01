@@ -6,7 +6,27 @@ import pytest
 import sys
 from pathlib import Path
 import warnings
+os.environ.setdefault("SECRET_KEY", "testsecret")
+os.environ.setdefault("ALGORITHM", "HS256")
+os.environ.setdefault("LEMONSQUEEZY_API_KEY", "test")
+os.environ.setdefault("LEMONSQUEEZY_STORE_ID", "1")
+
 import app.routes.auth as auth_routes
+
+class DummyRedis:
+    def __init__(self):
+        self.store = {}
+    def incr(self, key):
+        self.store[key] = self.store.get(key, 0) + 1
+        return self.store[key]
+    def expire(self, key, seconds):
+        pass
+    def scan_iter(self, match=None):
+        return list(self.store.keys())
+    def delete(self, key):
+        self.store.pop(key, None)
+
+auth_routes.limiter.redis = DummyRedis()
 
 # Ensure the backend directory is on sys.path so that "import app" works even
 # when tests are invoked from the repository root.

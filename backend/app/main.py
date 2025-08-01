@@ -6,8 +6,9 @@ from app.routes import admin
 from fastapi.openapi.utils import get_openapi
 from app.routes import song_package 
 from app.routes import order
-from app.routes import song  
+from app.routes import song
 from app.routes import admin_orders
+from app.routes import payments
 from fastapi.staticfiles import StaticFiles
 from app.routes import admin_songs
 from fastapi.responses import FileResponse
@@ -46,6 +47,9 @@ app.include_router(song_package.router)  # 👈 song package route
 
 # ✅ Order Routers
 app.include_router(order.router)
+
+# ✅ Payment Routers
+app.include_router(payments.router)
 
 # ✅ Song Package routers
 

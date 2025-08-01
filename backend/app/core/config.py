@@ -17,6 +17,9 @@ class Settings(BaseSettings):
     EMAIL_FROM: str = "no-reply@example.com"
     ALLOWED_ORIGINS: str = "*"
 
+    LEMONSQUEEZY_API_KEY: str | None = None
+    LEMONSQUEEZY_STORE_ID: str | None = None
+
     model_config = SettingsConfigDict(env_file=".env")
 
 settings = Settings()
