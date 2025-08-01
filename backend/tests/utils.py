@@ -21,7 +21,7 @@ def login_user(client, email, password="password"):
     return response.json()
 
 
-def create_package(client, tier="basic"):
+def create_package(client, tier="basic", variant_id=None):
     """Create a song package and return the response JSON."""
     payload = {
         "tier": tier,
@@ -31,6 +31,8 @@ def create_package(client, tier="basic"):
         "duration_seconds": 30,
         "commercial_use": False,
     }
+    if variant_id is not None:
+        payload["lemon_squeezy_variant_id"] = variant_id
     res = client.post("/packages/", json=payload)
     assert res.status_code == status.HTTP_200_OK
     return res.json()

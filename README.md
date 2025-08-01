@@ -83,6 +83,8 @@ following environment variables (e.g. in a `.env` file) for real email delivery:
 - `SMTP_USER` – username for SMTP authentication
 - `SMTP_PASSWORD` – password for SMTP authentication
 - `EMAIL_FROM` – address used as the "from" field
+- `LEMONSQUEEZY_API_KEY` – API key for Lemon Squeezy checkouts
+- `LEMONSQUEEZY_STORE_ID` – your Lemon Squeezy store ID
 
 If `SMTP_HOST` is not set, emails are printed to the console instead. This
 allows tests to run without an email server.

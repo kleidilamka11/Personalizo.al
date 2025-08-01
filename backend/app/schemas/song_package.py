@@ -8,6 +8,7 @@ class SongPackageBase(BaseModel):
     price_eur: int
     duration_seconds: int
     commercial_use: bool
+    lemon_squeezy_variant_id: Optional[int] | None = None
 
 class SongPackageResponse(SongPackageBase):
     id: int
@@ -23,3 +24,4 @@ class SongPackageUpdate(BaseModel):
     price_eur: int | None = None
     duration_seconds: int | None = None
     commercial_use: bool | None = None
+    lemon_squeezy_variant_id: int | None = None
