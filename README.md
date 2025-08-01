@@ -93,3 +93,7 @@ The API now uses Redis to store rate limiting counters. Set the `REDIS_URL`
 environment variable to point to your Redis instance (defaults to
 `redis://localhost:6379/0`). Ensure Redis is running before starting the
 backend server.
+
+The allowed CORS origins are also configurable. Set `ALLOWED_ORIGINS` to a
+comma-separated list of origins (or `*` to allow any origin) when launching the
+backend.

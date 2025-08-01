@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     SMTP_USER: str | None = None
     SMTP_PASSWORD: str | None = None
     EMAIL_FROM: str = "no-reply@example.com"
+    ALLOWED_ORIGINS: str = "*"
 
     model_config = SettingsConfigDict(env_file=".env")
 

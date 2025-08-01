@@ -13,6 +13,7 @@ from app.routes import admin_songs
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from .db import BASE_DIR
+from app.core.config import settings
 
 
 
@@ -24,9 +25,13 @@ app = FastAPI()
 # ✅ Create tables
 Base.metadata.create_all(bind=engine)
 
+origins = ["*"]
+if settings.ALLOWED_ORIGINS != "*":
+    origins = [o.strip() for o in settings.ALLOWED_ORIGINS.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
